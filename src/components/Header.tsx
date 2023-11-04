@@ -21,7 +21,9 @@ const Header = () => {
                         <HeaderMenu />
                     </Box>
                     <Box>
-                        <Typography variant='h2'>
+                        <Typography 
+                        variant='h2' 
+                        fontWeight={500}>
                             <Link
                                 underline="none"
                                 color="inherit"

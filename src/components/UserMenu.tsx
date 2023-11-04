@@ -1,9 +1,17 @@
-import React from 'react'
+import CommonMenu from './common/CommonMenu'
+
+const updateProfile = "Update Profile"
+const logout = "Logout"
 
 const UserMenu = () => {
-  return (
-    <div>UserMenu</div>
-  )
+    return (
+        <>
+            <CommonMenu
+                updateProfile={updateProfile}
+                logout={logout}
+            />
+        </>
+    )
 }
 
 export default UserMenu
