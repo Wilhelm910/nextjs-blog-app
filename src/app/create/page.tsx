@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import BlogForm from '@/components/BlogForm'
 import { Metadata } from 'next'
 import React from 'react'
 
@@ -8,8 +8,11 @@ export const metadata: Metadata = {
 }
 
 const Create = () => {
+
   return (
-   <Typography variant='h1'>HELLO</Typography>
+    <>
+      <BlogForm />
+    </>
   )
 }
 
