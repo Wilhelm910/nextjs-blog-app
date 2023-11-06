@@ -14,8 +14,8 @@ const Header = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     padding: "20px",
-                    marginRight: "120px",
-                    marginLeft: "120px"
+                    marginRight: "180px",
+                    marginLeft: "180px"
                 }} >
                     <Box>
                         <HeaderMenu />

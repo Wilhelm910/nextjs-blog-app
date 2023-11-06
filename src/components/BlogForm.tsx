@@ -6,6 +6,8 @@ import React, { useState } from 'react'
 import { TagsInput } from 'react-tag-input-component'
 import { VisuallyHiddenInput } from './common/styles'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { db } from "../firebaseConfig"
 
 
 const BlogFormContent = {
@@ -71,9 +73,22 @@ const BlogForm = () => {
         console.log(file)
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         console.log(formData)
+        if (category && tags && title && trending && description && file) {
+            try {
+                await addDoc(collection(db, "blogs"), {
+                    ...formData,
+                    timestamp: serverTimestamp(),
+                    author: user.displayName,
+                    userId: user.id
+                })
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
     }
 
     const handleTEST = (e: any) => {
@@ -90,6 +105,7 @@ const BlogForm = () => {
             <form onSubmit={handleSubmit}>
                 <Stack mb={3} width="500px">
                     <TextField
+                        required
                         id="outlined-basic"
                         label="Title"
                         variant="outlined"
@@ -132,6 +148,7 @@ const BlogForm = () => {
                 <Stack mb={3} width="500px">
                     <InputLabel id="demo-simple-select-label">Category</InputLabel>
                     <Select
+                        required
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={category}
@@ -150,6 +167,7 @@ const BlogForm = () => {
                 </Stack>
                 <Stack mb={3} width="500px">
                     <TextField
+                        required
                         id="outlined-static"
                         label="Description"
                         variant="outlined"
