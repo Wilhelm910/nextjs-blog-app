@@ -6,6 +6,7 @@ import { useAuthContext } from "./utils/AuthContextProvider";
 import { getBlogs } from "./utils/firebaseBlogs";
 import { QuerySnapshot, collection, getDocs, onSnapshot, query } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import BlogCard from "@/components/BlogCard";
 
 
 
@@ -40,14 +41,12 @@ const Home = () => {
   return (
     <>
       <Box ml={20} mr={20} mt={2}>
+
         {user?.displayName}
         {blogs && blogs.map((blog, index) => {
           return (
             <>
-              <Box key={index}>
-                <Typography>{blog.title}
-                </Typography>
-              </Box>
+              <BlogCard blog={blog} key={index} />
             </>
 
           )
