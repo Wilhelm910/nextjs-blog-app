@@ -4,7 +4,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import ThemeClient from './ThemeClient'
 import { Box } from '@mui/material'
-
+import { AuthContextProvider } from './utils/AuthContextProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,10 +22,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeClient>
-          <Header />
-          <Box ml={20} mr={20} mt={2}>
-            {children}
-          </Box>
+          <AuthContextProvider>
+            <Header />
+            <Box ml={20} mr={20} mt={2}>
+              {children}
+            </Box>
+          </AuthContextProvider>
         </ThemeClient>
       </body>
     </html>

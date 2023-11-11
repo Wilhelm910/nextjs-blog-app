@@ -1,15 +1,19 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import { Box } from '@mui/material';
+"use client"
+
+import { Box } from "@mui/material";
+import { useEffect } from "react";
+import { useAuthContext } from "./utils/AuthContextProvider";
+
 
 
 export default function Home() {
+
+  const { user, setUser } = useAuthContext()
+
   return (
     <>
       <Box ml={20} mr={20} mt={2}>
-        Hello
+        {user?.displayName}
       </Box>
     </>
 
