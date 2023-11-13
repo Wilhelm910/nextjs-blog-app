@@ -79,7 +79,7 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
           </CardContent>
         </Card>
       </Box>
-      <BlogModal open={open} setOpen={setOpen}/>
+      <BlogModal open={open} setOpen={setOpen} id={params.id}/>
     </>
   )
 }

@@ -5,6 +5,8 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -13,12 +15,15 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    borderRadius: "10px",
     boxShadow: 24,
     p: 4,
+    display: "flex",
+    flexDirection: "column",
+    width: "auto"
 };
 
-export default function BlogModal({ open, setOpen }: any) {
+export default function BlogModal({ open, setOpen, id }: any) {
 
     const handleClose = () => setOpen(false);
 
@@ -40,12 +45,12 @@ export default function BlogModal({ open, setOpen }: any) {
             >
                 <Fade in={open}>
                     <Box sx={style}>
-                        <Typography id="transition-modal-title" variant="h6" component="h2">
-                            Text in a modal
-                        </Typography>
-                        <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                        </Typography>
+                        <Button sx={{marginBottom: 2}} variant="contained" color='error' startIcon={<DeleteIcon />}>
+                            Delete
+                        </Button>
+                        <Button variant="contained" startIcon={<EditIcon />} href={`/edit/${id}`}>
+                           Edit
+                        </Button>
                     </Box>
                 </Fade>
             </Modal>

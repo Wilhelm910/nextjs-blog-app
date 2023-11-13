@@ -1,14 +1,17 @@
 "use client"
 
 import { Label } from '@mui/icons-material'
-import { Button, FormControlLabel, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { Box, Button, FormControlLabel, FormLabel, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { TagsInput } from 'react-tag-input-component'
 import { VisuallyHiddenInput } from './common/styles'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-import { db } from "../firebaseConfig"
-
+import { addDoc, collection, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore'
+import { db, storage } from "../firebaseConfig"
+import { useAuthContext } from '@/app/utils/AuthContextProvider'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { useRouter } from 'next/navigation'
+import CheckIcon from '@mui/icons-material/Check';
 
 const BlogFormContent = {
     title: "",
@@ -17,7 +20,9 @@ const BlogFormContent = {
     category: "",
     description: "",
     comments: [],
-    likes: []
+    likes: [],
+    userId: "",
+    author: ""
 }
 
 const categoryOptions = [
@@ -30,12 +35,16 @@ const categoryOptions = [
 ]
 
 
-const BlogForm = () => {
+const BlogForm = ({ id }: any) => {
 
     const [file, setFile] = useState<File>()
     const [formData, setFormData] = useState(BlogFormContent)
+    const { user, setUser } = useAuthContext()
+    const [progress, setProgress] = useState<number>()
+    const router = useRouter()
 
-    const { title, tags, trending, category, description } = formData
+
+    const { title, tags, trending, category, description, author, userId } = formData
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -73,27 +82,95 @@ const BlogForm = () => {
         console.log(file)
     };
 
+    useEffect(() => {
+        const uploadFile = () => {
+            const storageRef = ref(storage, file?.name)
+            const uploadTask = uploadBytesResumable(storageRef, file)
+
+            uploadTask.on("state_changed", (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                console.log("Upload is" + progress + "% done")
+                console.log(snapshot)
+                setProgress(progress)
+
+                switch (snapshot.state) {
+                    case "paused":
+                        console.log("upload is paused")
+                    case "running":
+                        console.log("Upload is running")
+                        break;
+                    default:
+                        break
+                }
+
+            }, (error) => {
+                console.log(error)
+            },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+                        setFormData((prev) => ({
+                            ...prev,
+                            imgUrl: downloadUrl
+                        }))
+                    })
+                })
+        }
+
+        file && uploadFile()
+    }, [file])
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log(formData)
-        if (category && tags && title && trending && description && file) {
-            try {
-                await addDoc(collection(db, "blogs"), {
-                    ...formData,
-                    timestamp: serverTimestamp(),
-                    author: user.displayName,
-                    userId: user.id
-                })
+        if (category && tags && title && trending && description) {
+            console.log("submitted")
+            if (!id) {
+                console.log("create")
+                try {
+                    await addDoc(collection(db, "blogs"), {
+                        ...formData,
+                        timestamp: serverTimestamp(),
+                        author: user.displayName,
+                        userId: user.uid
+                    })
+                    router.push("/")
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            } else {
+                console.log("update")
+                try {
+                    await updateDoc(doc(db, "blogs", id), {
+                        ...formData,
+                        timestamp: serverTimestamp(),
+                        author: user.displayName,
+                        userId: user.uid
+                    })
+                    router.push("/")
+                }
+                catch (error) {
+                    console.log(error)
+                }
             }
-            catch (error) {
-                console.log(error)
-            }
+        } else {
+            console.log("not submittted")
         }
     }
 
-    const handleTEST = (e: any) => {
-        setFile(e.target.files[0])
-        console.log(file)
+    useEffect(() => {
+        id && getBlog()
+    }, [id])
+
+    const getBlog = async () => {
+        try {
+            const blogRef = doc(db, "blogs", id)
+            const blogDetails = await getDoc(blogRef)
+            setFormData({ ...blogDetails.data() })
+        }
+        catch (error) {
+            console.log(error)
+        }
+
     }
 
     return (
@@ -101,7 +178,6 @@ const BlogForm = () => {
             display: "flex",
             alignItems: "center"
         }}>
-            <Typography variant='h3'>Create a new Blog</Typography>
             <form onSubmit={handleSubmit}>
                 <Stack mb={3} width="500px">
                     <TextField
@@ -178,27 +254,26 @@ const BlogForm = () => {
                         multiline
                     />
                 </Stack>
-                <Stack mb={3} width="200px">
-                    <Button
-                        onChange={handleFile}
-                        component="label"
-                        variant="contained"
-                        startIcon={<CloudUploadIcon />}>
-                        Upload file
-                        <VisuallyHiddenInput type="file" />
-                    </Button>
+                <Stack mb={3} width="auto">
+                    {progress != 100 ? (
+                        <Button
+                            onChange={handleFile}
+                            component="label"
+                            variant="contained"
+                            startIcon={<CloudUploadIcon />}>
+                            Upload file
+                            <VisuallyHiddenInput type="file" />
+                        </Button>
+                    ) : (
+                        <Paper elevation={4} sx={{ display: "flex", alignItems: "center", whiteSpace: "nowrap", justifyContent: "center", padding: 1 }}>
+                            <CheckIcon />
+                            <Typography sx={{ textAlign: "center" }} ml={1}>Image upload completed</Typography>
+                        </Paper>
+                    )}
                 </Stack>
-                <Stack mb={3} width="200px">
-                    <Button
-                        onChange={handleTEST}
-                        component="label"
-                        variant="contained"
-                        startIcon={<CloudUploadIcon />}>
-                        Upload file
-                        <VisuallyHiddenInput type="file" />
-                    </Button>
-                </Stack>
-                <Button variant="contained" type='submit'>Create Blog</Button>
+                <Button variant="contained" type='submit'>
+                    {id ? ("Update Blog") : ("Create Blog")}
+                </Button>
             </form>
         </Stack>
     )

@@ -1,4 +1,5 @@
 import BlogForm from '@/components/BlogForm'
+import { Box, Typography } from '@mui/material'
 import { Metadata } from 'next'
 import React from 'react'
 
@@ -11,7 +12,12 @@ const Create = () => {
 
   return (
     <>
-      <BlogForm />
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <Typography variant='h2' textAlign="center">
+          Create a new Blog
+        </Typography>
+        <BlogForm />
+      </Box>
     </>
   )
 }
