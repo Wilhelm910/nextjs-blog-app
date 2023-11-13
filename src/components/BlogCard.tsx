@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { CardActionArea } from '@mui/material';
 import Link from 'next/link';
+import BlogLikeButton from './BlogLikeButton';
 
 
 type BlogProps = {
@@ -38,42 +39,36 @@ const BlogCard = (props: BlogProps) => {
     const { title, tags, trending, category, description, comments, likes, author, imgUrl, timestamp, userId, id } = props
 
     return (
-        <Card sx={{ maxWidth: 545, height: 545, textDecoration: "none" }} >
-            <Link href={`blogs/${id}`}>
+        <Card sx={{ maxWidth: 545, height: 545}} >
+            <Link href={`blogs/${id}`} style={{textDecoration: "none", color: "black"}}>
                 <CardHeader
                     avatar={
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                             R
                         </Avatar>
                     }
-                    action={
-                        <IconButton aria-label="settings">
-                            <MoreVertIcon />
-                        </IconButton>
-                    }
                     title={title}
                     subheader={timestamp.toDate().toDateString()}
                 />
-                <CardMedia
-                    component="img"
-                    height="280"
-                    image={imgUrl}
-                    alt={title}
-                />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary" >
-                        {description.slice(0, 120) + "..."}
-                    </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                        <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="share">
-                        <ShareIcon />
-                    </IconButton>
-                </CardActions>
             </Link>
+            <CardMedia
+                component="img"
+                height="280"
+                image={imgUrl}
+                alt={title}
+            />
+            <CardContent>
+                <Typography variant="body2" color="text.secondary" >
+                    {description.slice(0, 120) + "..."}
+                </Typography>
+            </CardContent>
+            <CardActions disableSpacing>
+                <BlogLikeButton id={id} likes={likes} userId={userId} />
+                <IconButton aria-label="share">
+                    <ShareIcon />
+                </IconButton>
+            </CardActions>
+
         </Card>
     )
 }
