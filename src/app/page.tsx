@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "./utils/AuthContextProvider";
 import { getBlogs } from "./utils/firebaseBlogs";
@@ -41,16 +41,15 @@ const Home = () => {
   return (
     <>
       <Box ml={20} mr={20} mt={2}>
-
-        {user?.displayName}
-        {blogs && blogs.map((blog, index) => {
-          return (
-            <>
-              <BlogCard blog={blog} key={index} />
-            </>
-
-          )
-        })}
+        <Grid container spacing={4}>
+          {blogs && blogs.map((blog, index) => {
+            return (
+              <Grid item xs={6} key={index}>
+                <BlogCard {...blog} />
+              </Grid>
+            )
+          })}
+        </Grid>
       </Box>
     </>
 
