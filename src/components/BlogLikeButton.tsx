@@ -1,17 +1,33 @@
 "use client"
 
 import { IconButton } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebaseConfig';
 
 const BlogLikeButton = ({ id, likes, userId }: any) => {
 
-    const handleLike = (e: any) => {
-        e.stopPropagation()
-        console.log(id)
+    const [blog, setBlog] = useState<Array>([])
+
+    const handleLike = async () => {
         console.log(likes)
-        console.log(userId)
+        if (likes.includes(userId)) {
+            likes.splice(likes.indexOf(userId), 1)
+        } else {
+            likes.push(userId)
+        }
+        console.log(likes)
+        const blogRef = doc(db, "blogs", id)
+        const blogDetails = await getDoc(blogRef)
+        setBlog(blogDetails.data())
+        await updateDoc(doc(db, "blogs", id), {
+            ...blog,
+            likes,
+            timestamp: serverTimestamp()
+        })
     }
+
 
 
     return (
