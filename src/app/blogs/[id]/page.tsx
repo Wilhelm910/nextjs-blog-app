@@ -38,7 +38,7 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
     setBlog(blogDetails.data())
   }
 
-  const { author, title, description, imgUrl, timestamp, comments, id } = blog
+  const { author, title, description, imgUrl, timestamp, comments} = blog
 
 
   return (
@@ -81,7 +81,7 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
             </Typography>
           </CardContent>
           <CardContent>
-            <Comment id={id}/>
+            <Comment id={params.id} />
           </CardContent>
           <CardContent>
             {comments?.length > 0 && (

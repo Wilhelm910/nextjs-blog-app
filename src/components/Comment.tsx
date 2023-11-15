@@ -18,7 +18,7 @@ const Comment = ({ id }: any) => {
 
     const [formData, setFormData] = useState(commentData)
     const { user, setUser } = useAuthContext()
-    const { body, author, createdAt, userId } = commentData
+    const { body, author, createdAt, userId } = formData
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -27,10 +27,18 @@ const Comment = ({ id }: any) => {
         })
         console.log(formData)
     }
+    console.log(id)
 
-    const handleInput = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
+            let userComment = []
+            userComment.push({
+                createdAt: Timestamp.fromDate(new Date()),
+                userId,
+                name: user?.displayName,
+                body: userComment
+            })
             await updateDoc(doc(db, "blogs", id), {
                 ...formData,
                 createdAt: serverTimestamp(),
@@ -53,7 +61,7 @@ const Comment = ({ id }: any) => {
                 <Stack mb={2}>
                     <Typography variant='h5'>Write a comment</Typography>
                 </Stack>
-                <form onSubmit={handleInput} style={{ width: "100%" }}>
+                <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                     <Stack sx={{
                         display: "flex",
                         alignItems: "center",
@@ -69,7 +77,7 @@ const Comment = ({ id }: any) => {
                             value={body}
                             onChange={handleChange}
                         />
-                        <Button variant="contained" type='submit' disabled={!user}>Comment</Button>
+                        <Button variant="contained" color='secondary' type='submit' disabled={!user || body.length == 0}>Comment</Button>
                     </Stack>
                 </form>
             </Box>
