@@ -36,8 +36,6 @@ const Home = () => {
 
   }, [])
 
-  console.log(blogs)
-
   return (
     <>
       <Box ml={20} mr={20} mt={2}>

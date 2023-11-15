@@ -8,6 +8,9 @@ import React, { useEffect, useState } from 'react'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { red } from '@mui/material/colors';
 import BlogModal from '@/components/BlogModal'
+import Accordion from '@/components/Accordion'
+import Comment from '@/components/Comment'
+
 
 const BlogDetailPage = ({ params }: { params: { id: string } }) => {
 
@@ -35,7 +38,7 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
     setBlog(blogDetails.data())
   }
 
-  const { author, title, description, imgUrl, timestamp } = blog
+  const { author, title, description, imgUrl, timestamp, comments, id } = blog
 
 
   return (
@@ -77,9 +80,20 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
               {description}
             </Typography>
           </CardContent>
+          <CardContent>
+            <Comment id={id}/>
+          </CardContent>
+          <CardContent>
+            {comments?.length > 0 && (
+              <>
+
+                <Accordion comments={comments} />
+              </>
+            )}
+          </CardContent>
         </Card>
       </Box>
-      <BlogModal open={open} setOpen={setOpen} id={params.id}/>
+      <BlogModal open={open} setOpen={setOpen} id={params.id} />
     </>
   )
 }

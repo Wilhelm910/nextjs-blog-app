@@ -17,6 +17,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { CardActionArea } from '@mui/material';
 import Link from 'next/link';
 import BlogLikeButton from './BlogLikeButton';
+import { useAuthContext } from '@/app/utils/AuthContextProvider';
+import CommentIcon from '@mui/icons-material/Comment';
 
 
 type BlogProps = {
@@ -38,9 +40,11 @@ const BlogCard = (props: BlogProps) => {
 
     const { title, tags, trending, category, description, comments, likes, author, imgUrl, timestamp, userId, id } = props
 
+    const { user, setUser } = useAuthContext()
+
     return (
-        <Card sx={{ maxWidth: 545, height: 545}} >
-            <Link href={`blogs/${id}`} style={{textDecoration: "none", color: "black"}}>
+        <Card sx={{ maxWidth: 545, height: 545 }} >
+            <Link href={`blogs/${id}`} style={{ textDecoration: "none", color: "black" }}>
                 <CardHeader
                     avatar={
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -48,7 +52,7 @@ const BlogCard = (props: BlogProps) => {
                         </Avatar>
                     }
                     title={title}
-                    subheader={timestamp.toDate().toDateString()}
+                    subheader="12312312"
                 />
             </Link>
             <CardMedia
@@ -63,12 +67,15 @@ const BlogCard = (props: BlogProps) => {
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <BlogLikeButton id={id} likes={likes} userId={userId} />
+                <BlogLikeButton id={id} likes={likes} userId={user ? user.uid : null} />
+                <IconButton>
+                    <CommentIcon />
+                    {comments.length}
+                </IconButton>
                 <IconButton aria-label="share">
                     <ShareIcon />
                 </IconButton>
             </CardActions>
-
         </Card>
     )
 }

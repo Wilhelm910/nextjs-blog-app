@@ -51,6 +51,7 @@ const BlogForm = ({ id }: any) => {
             ...formData,
             [e.target.name]: e.target.value
         })
+        console.log(formData)
     }
 
     const handleTags = (tags: any) => {

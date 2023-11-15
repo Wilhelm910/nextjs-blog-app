@@ -11,13 +11,11 @@ const BlogLikeButton = ({ id, likes, userId }: any) => {
     const [blog, setBlog] = useState<Array>([])
 
     const handleLike = async () => {
-        console.log(likes)
         if (likes.includes(userId)) {
             likes.splice(likes.indexOf(userId), 1)
         } else {
             likes.push(userId)
         }
-        console.log(likes)
         const blogRef = doc(db, "blogs", id)
         const blogDetails = await getDoc(blogRef)
         setBlog(blogDetails.data())
@@ -28,11 +26,9 @@ const BlogLikeButton = ({ id, likes, userId }: any) => {
         })
     }
 
-
-
     return (
         <>
-            <IconButton aria-label="add to favorites" disabled={likes.includes(userId)} onClick={handleLike}>
+            <IconButton aria-label="add to favorites" disabled={!userId} onClick={handleLike}>
                 {likes.includes(userId) ? (
                     <>
                         <FavoriteIcon color='primary' />
