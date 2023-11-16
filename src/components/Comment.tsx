@@ -3,53 +3,44 @@
 import { useAuthContext } from '@/app/utils/AuthContextProvider'
 import { db } from '@/firebaseConfig'
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
-import { doc, serverTimestamp, updateDoc } from 'firebase/firestore'
+import { Timestamp, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
 import React, { useState } from 'react'
 
 
-const commentData = {
-    body: "",
-    author: "",
-    createdAt: "",
-    userId: ""
-}
+const Comment = ({ id, blog }: any) => {
 
-const Comment = ({ id }: any) => {
-
-    const [formData, setFormData] = useState(commentData)
+    const [commentBody, setCommentBody] = useState("")
     const { user, setUser } = useAuthContext()
-    const { body, author, createdAt, userId } = formData
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        })
-        console.log(formData)
-    }
-    console.log(id)
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     setFormData({
+    //         ...formData,
+    //         [e.target.name]: e.target.value
+    //     })
+    //     console.log(formData)
+    // }
+    // console.log(id)
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
-            let userComment = []
-            userComment.push({
+            blog.comments.push({
                 createdAt: Timestamp.fromDate(new Date()),
-                userId,
-                name: user?.displayName,
-                body: userComment
+                userId: user.uid,
+                name: user.displayName,
+                body: commentBody
             })
             await updateDoc(doc(db, "blogs", id), {
-                ...formData,
-                createdAt: serverTimestamp(),
-                author: user.displayName,
-                userId: user.uid
+                ...blog,
+                comments: blog.comments
             })
+            setCommentBody("")
         }
         catch (error) {
             console.log(error)
         }
     }
+
 
     return (
         <>
@@ -74,10 +65,10 @@ const Comment = ({ id }: any) => {
                             multiline
                             rows={4}
                             name='body'
-                            value={body}
-                            onChange={handleChange}
+                            value={commentBody}
+                            onChange={(e) => setCommentBody(e.target.value)}
                         />
-                        <Button variant="contained" color='secondary' type='submit' disabled={!user || body.length == 0}>Comment</Button>
+                        <Button variant="contained" color='secondary' type='submit' disabled={!user || commentBody.length == 0}>Comment</Button>
                     </Stack>
                 </form>
             </Box>

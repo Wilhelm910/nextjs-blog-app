@@ -10,12 +10,14 @@ import { red } from '@mui/material/colors';
 import BlogModal from '@/components/BlogModal'
 import Accordion from '@/components/Accordion'
 import Comment from '@/components/Comment'
+import { useAuthContext } from '@/app/utils/AuthContextProvider'
 
 
 const BlogDetailPage = ({ params }: { params: { id: string } }) => {
 
   const [blog, setBlog] = useState<Array>([])
   const [open, setOpen] = React.useState(false);
+  const { user, setUser } = useAuthContext()
 
   const handleOpen = () => setOpen(true);
 
@@ -57,7 +59,7 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
               </Avatar>
             }
             action={
-              <IconButton aria-label="settings" onClick={handleOpen} >
+              <IconButton aria-label="settings" disabled={!user} onClick={handleOpen} >
                 <MoreVertIcon />
               </IconButton>
             }
@@ -81,7 +83,7 @@ const BlogDetailPage = ({ params }: { params: { id: string } }) => {
             </Typography>
           </CardContent>
           <CardContent>
-            <Comment id={params.id} />
+            <Comment id={params.id}  blog={blog} />
           </CardContent>
           <CardContent>
             {comments?.length > 0 && (
