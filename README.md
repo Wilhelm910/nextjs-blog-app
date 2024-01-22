@@ -10,6 +10,14 @@ This is a simple blog app built with Next.js. It allows you to create and manage
 * Google Firebase
 
 ## Getting Started
-* Clone the repository: git clone https://github.com/Wilhelm910/nextjs-blog-app.git
-* Install all dependencies: npm install
-* Run the development server: npm run dev
+1. Clone the repository:
+```sh
+   git clone https://github.com/Wilhelm910/nextjs-blog-app.git
+   ```
+2. Install all dependencies:
+
+3. Run the development server:
+   ```sh
+  npm run dev
+   ```
+
