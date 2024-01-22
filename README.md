@@ -12,12 +12,14 @@ This is a simple blog app built with Next.js. It allows you to create and manage
 ## Getting Started
 1. Clone the repository:
 ```sh
-   git clone https://github.com/Wilhelm910/nextjs-blog-app.git
-   ```
+git clone https://github.com/Wilhelm910/nextjs-blog-app.git
+```
 2. Install all dependencies:
-
+ ```sh
+npm install
+```
 3. Run the development server:
-   ```sh
-  npm run dev
-   ```
+ ```sh
+npm run dev
+ ```
 
