@@ -23,5 +23,3 @@ npm install
 npm run dev
  ```
 
-## Credits
-This project was realized as part of https://github.com/ByteGrad react & next.js course.
